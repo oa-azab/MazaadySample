@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="360dp"
+    android:layout_marginHorizontal="16dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="@drawable/bg_gradient_book"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_book_1"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Mazaady.Image.Round" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_top_lbl"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="2dp"
+        android:text="Free e-book"
+        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/imgDuration"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_duration"
+        app:layout_constraintBottom_toTopOf="@id/lbl1"
+        app:layout_constraintStart_toStartOf="@id/lbl1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="Step design sprint for\nbeginner"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/imgDuration"
+        app:layout_constraintStart_toStartOf="@id/imgDuration" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:text="5h 21m"
+        android:textColor="#8C8C8C"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/imgDuration"
+        app:layout_constraintStart_toEndOf="@id/imgDuration"
+        app:layout_constraintTop_toTopOf="@id/imgDuration" />
+
+    <TextView
+        android:id="@+id/lbl3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_lbl_3"
+        android:paddingHorizontal="4dp"
+        android:text="Free"
+        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@id/lbl2"
+        app:layout_constraintTop_toBottomOf="@id/lbl2"
+        app:layout_constraintTop_toTopOf="@id/lbl2" />
+
+    <TextView
+        android:id="@+id/lbl2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_lbl_2"
+        android:paddingHorizontal="4dp"
+        android:text="UI/UX"
+        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@id/lbl1"
+        app:layout_constraintTop_toBottomOf="@id/lbl1"
+        app:layout_constraintTop_toTopOf="@id/lbl1" />
+
+    <TextView
+        android:id="@+id/lbl1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_lbl_1"
+        android:paddingHorizontal="4dp"
+        android:text="6 lessons"
+        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/imgBookAuthor"
+        app:layout_constraintStart_toStartOf="@id/imgBookAuthor" />
+
+    <ImageView
+        android:id="@+id/imgBookAuthor"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16sp"
+        android:layout_marginBottom="22dp"
+        android:src="@drawable/ic_book_author"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="Laurel Seilha"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/imgBookAuthor"
+        app:layout_constraintTop_toTopOf="@id/imgBookAuthor" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="Product Designer"
+        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+        android:textColor="#9D9FA0"
+        app:layout_constraintBottom_toBottomOf="@id/imgBookAuthor"
+        app:layout_constraintStart_toEndOf="@id/imgBookAuthor" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

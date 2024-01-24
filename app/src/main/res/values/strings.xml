@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MazaadyTask</string>
+
+    <string name="upcoming_courses"><b>Upcoming</b> course of this week</string>
+    <string name="top_bar_points"><b>+1600</b> Points</string>
+
 </resources>
