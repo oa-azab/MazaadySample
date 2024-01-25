@@ -5,7 +5,9 @@ import com.mazaady.task.model.Option
 import com.mazaady.task.model.Option.Companion.NOT_LISTED_OPTION
 import com.mazaady.task.model.Property
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RemoteCategoryDataSource @Inject constructor(
     private val service: CategoryService
 ) {

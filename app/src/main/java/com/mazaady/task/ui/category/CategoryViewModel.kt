@@ -3,11 +3,14 @@ package com.mazaady.task.ui.category
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mazaady.task.data.RemoteCategoryDataSource
+import com.mazaady.task.domain.GetCategoriesUseCase
+import com.mazaady.task.domain.GetPropertiesOfCategoryUseCase
+import com.mazaady.task.domain.SelectPropertyOptionUseCase
 import com.mazaady.task.model.AppResult
 import com.mazaady.task.model.Category
 import com.mazaady.task.model.Option
 import com.mazaady.task.model.Property
+import com.mazaady.task.model.UCResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +19,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val dataSource: RemoteCategoryDataSource
+    private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val getPropertiesOfCategoryUseCase: GetPropertiesOfCategoryUseCase,
+    private val selectPropertyOptionUseCase: SelectPropertyOptionUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState(emptyList()))
@@ -24,11 +29,16 @@ class CategoryViewModel @Inject constructor(
 
     fun getCategories() {
         viewModelScope.launch {
-            val list = dataSource.getAllCategories()
-            list.forEach {
-                Log.d("CategoryViewModel", it.toString())
+            when (val result = getCategoriesUseCase.invoke()) {
+                is UCResult.Success -> {
+                    _uiState.value = UiState(result.data)
+                }
+
+                is UCResult.Error -> {
+                    Log.w("getCategories", result.throwable)
+                    // TODO:
+                }
             }
-            _uiState.value = UiState(list)
         }
     }
 
@@ -53,51 +63,39 @@ class CategoryViewModel @Inject constructor(
 
     private fun getProps(id: String) {
         viewModelScope.launch {
-            val props = dataSource.getPropertiesOfCategory(id)
-            val newState = _uiState.value.copy(props = props)
-            _uiState.value = newState
+            val result = getPropertiesOfCategoryUseCase.invoke(id)
+            when (result) {
+                is UCResult.Success -> {
+                    val newState = _uiState.value.copy(props = result.data)
+                    _uiState.value = newState
+                }
+
+                is UCResult.Error -> {
+                    Log.w("getCategories", result.throwable)
+                    // TODO:
+                }
+            }
+
         }
     }
 
     fun propOptionSelected(property: Property, option: Option) {
         viewModelScope.launch {
-            // Update current state
             val currentProps = _uiState.value.props ?: return@launch
-            val optionChildren = if (option.hasChildren) {
-                dataSource.getPropertyWithOptionId(option.id)
-            } else {
-                emptyList()
-            }
 
-            // TODO: remove old
-            // Remove children of property
-            // val listOfParentIdsToRemove = mutableListOf<String>()
-            // val toDelete = currentProps.find { it.id == property.id }?.selectedOption?.id
-            // if (toDelete != null) {
-            //     val searchFor = mutableListOf(toDelete)
-            //     while (searchFor.isNotEmpty()) {
-            //         val ids = currentProps.filter { searchFor.contains(it.parentId) }
-            //             .map { it.id }
-            //         listOfParentIdsToRemove += ids
-            //         searchFor.clear()
-            //         searchFor += ids
-            //     }
-            // }
+            val result = selectPropertyOptionUseCase.invoke(currentProps, property, option)
+            when (result) {
+                is UCResult.Success -> {
+                    val newState = _uiState.value.copy(props = result.data)
+                    _uiState.value = newState
+                }
 
-            // val filteredProps = currentProps.filterNot { listOfParentIdsToRemove.contains(it.id) }
-
-            val newProps = mutableListOf<Property>()
-            for (prop in currentProps) {
-                if (prop.id == property.id) {
-                    val newProp = prop.copy(selectedOption = option)
-                    newProps += newProp
-                    newProps += optionChildren
-                } else {
-                    newProps += prop
+                is UCResult.Error -> {
+                    Log.w("propOptionSelected", result.throwable)
+                    // TODO
                 }
             }
-            val newState = _uiState.value.copy(props = newProps.toList())
-            _uiState.value = newState
+
         }
     }
 
