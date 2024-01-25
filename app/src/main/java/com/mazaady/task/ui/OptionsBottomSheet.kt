@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mazaady.task.databinding.OptionsBottomSheetBinding
 import com.mazaady.task.model.Option
-import com.mazaady.task.ui.categoryscreen.OptionAdapter
+import com.mazaady.task.ui.category.OptionAdapter
 
 class OptionsBottomSheet(
     private val options: List<Option>,

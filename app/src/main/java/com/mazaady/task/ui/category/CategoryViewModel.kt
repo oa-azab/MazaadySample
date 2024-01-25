@@ -1,4 +1,4 @@
-package com.mazaady.task.ui.categoryscreen
+package com.mazaady.task.ui.category
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

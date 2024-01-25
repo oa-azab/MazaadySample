@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingHorizontal="12dp"
-    tools:context=".ui.categoryscreen.CategoryActivity">
+    tools:context=".ui.category.CategoryActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputCategory"

@@ -1,11 +1,9 @@
-package com.mazaady.task.ui.categoryscreen
+package com.mazaady.task.ui.category
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mazaady.task.databinding.ItemCategoryBinding
 import com.mazaady.task.databinding.ItemOptionBinding
-import com.mazaady.task.model.Category
 import com.mazaady.task.model.Option
 
 class OptionAdapter(

@@ -1,4 +1,4 @@
-package com.mazaady.task.secondscreen
+package com.mazaady.task.ui.second
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

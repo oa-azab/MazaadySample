@@ -1,4 +1,4 @@
-package com.mazaady.task.secondscreen
+package com.mazaady.task.ui.second
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

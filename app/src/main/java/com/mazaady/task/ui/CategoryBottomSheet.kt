@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mazaady.task.databinding.CategoryBottomSheetBinding
 import com.mazaady.task.model.Category
-import com.mazaady.task.ui.categoryscreen.CategoryAdapter
+import com.mazaady.task.ui.category.CategoryAdapter
 
 class CategoryBottomSheet(
     private val categories: List<Category>,

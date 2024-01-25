@@ -1,11 +1,11 @@
-package com.mazaady.task
+package com.mazaady.task.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.mazaady.task.databinding.ActivityMainBinding
-import com.mazaady.task.ui.categoryscreen.CategoryActivity
-import com.mazaady.task.secondscreen.SecondActivity
+import com.mazaady.task.ui.category.CategoryActivity
+import com.mazaady.task.ui.second.SecondActivity
 
 class MainActivity : AppCompatActivity() {
 
