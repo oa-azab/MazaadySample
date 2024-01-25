@@ -1,6 +1,8 @@
 package com.mazaady.task.ui.category
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -53,38 +55,56 @@ class CategoryActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
 
-                    val selectedCategory = uiState.selectedCategory
-                    if (selectedCategory != null) {
-                        binds.edtCategory.setText(selectedCategory.name)
+                    when (uiState) {
+                        is CategoryViewModel.UiState.Data -> {
+                            binds.progress.visibility = View.GONE
+                            val selectedCategory = uiState.selectedCategory
+                            if (selectedCategory != null) {
+                                binds.edtCategory.setText(selectedCategory.name)
 
-                        val children = selectedCategory.children
-                        if (children.isNotEmpty()) {
-                            binds.edtSubCategory.setOnClickListener {
-                                openCategoryBottomSheet(children) {
-                                    viewModel.selectSubCategory(it)
+                                val children = selectedCategory.children
+                                if (children.isNotEmpty()) {
+                                    binds.edtSubCategory.setOnClickListener {
+                                        openCategoryBottomSheet(children) {
+                                            viewModel.selectSubCategory(it)
+                                        }
+                                    }
+                                } else {
+                                    binds.edtSubCategory.setText("No SubCategory")
                                 }
                             }
-                        } else {
-                            binds.edtSubCategory.setText("No SubCategory")
+
+                            val selectedSubCategory = uiState.selectedSubCategory
+                            if (selectedSubCategory != null) {
+                                binds.edtSubCategory.setText(selectedSubCategory.name)
+                            } else {
+                                binds.edtSubCategory.text = null
+                            }
+
+                            binds.edtCategory.setOnClickListener {
+                                openCategoryBottomSheet(uiState.categories) {
+                                    viewModel.selectCategory(it)
+                                }
+                            }
+
+                            // Show properties
+                            val props = uiState.props.orEmpty()
+                            showProperties(props)
+                        }
+
+                        is CategoryViewModel.UiState.Loading -> {
+                            binds.progress.visibility = View.VISIBLE
+                        }
+
+                        is CategoryViewModel.UiState.Error -> {
+                            binds.progress.visibility = View.GONE
+                            Toast.makeText(
+                                this@CategoryActivity,
+                                uiState.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
-
-                    val selectedSubCategory = uiState.selectedSubCategory
-                    if (selectedSubCategory != null) {
-                        binds.edtSubCategory.setText(selectedSubCategory.name)
-                    } else {
-                        binds.edtSubCategory.text = null
-                    }
-
-                    binds.edtCategory.setOnClickListener {
-                        openCategoryBottomSheet(uiState.categories) {
-                            viewModel.selectCategory(it)
-                        }
-                    }
-
-                    // Show properties
-                    val props = uiState.props.orEmpty()
-                    showProperties(props)
                 }
             }
         }

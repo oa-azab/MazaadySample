@@ -24,55 +24,63 @@ class CategoryViewModel @Inject constructor(
     private val selectPropertyOptionUseCase: SelectPropertyOptionUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(UiState(emptyList()))
+    private var dataModel = UiState.Data(emptyList())
+
+    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
     val uiState: StateFlow<UiState> = _uiState
 
     fun getCategories() {
         viewModelScope.launch {
+            _uiState.value = UiState.Loading
             when (val result = getCategoriesUseCase.invoke()) {
                 is UCResult.Success -> {
-                    _uiState.value = UiState(result.data)
+                    dataModel = UiState.Data(result.data)
+                    _uiState.value = dataModel
                 }
 
                 is UCResult.Error -> {
                     Log.w("getCategories", result.throwable)
-                    // TODO:
+                    _uiState.value = UiState.Error(result.throwable.localizedMessage)
                 }
             }
         }
     }
 
     fun selectCategory(category: Category) {
-        val newState = _uiState.value.copy(
+        val newState = dataModel.copy(
             selectedCategory = category,
             selectedSubCategory = null,
             props = null
         )
+        dataModel = newState
         _uiState.value = newState
         // TODO: If has no children
     }
 
     fun selectSubCategory(category: Category) {
-        val newState = _uiState.value.copy(
+        val newState = dataModel.copy(
             selectedSubCategory = category,
             props = null
         )
+        dataModel = newState
         _uiState.value = newState
         getProps(category.id)
     }
 
     private fun getProps(id: String) {
         viewModelScope.launch {
+            _uiState.value = UiState.Loading
             val result = getPropertiesOfCategoryUseCase.invoke(id)
             when (result) {
                 is UCResult.Success -> {
-                    val newState = _uiState.value.copy(props = result.data)
+                    val newState = dataModel.copy(props = result.data)
+                    dataModel = newState
                     _uiState.value = newState
                 }
 
                 is UCResult.Error -> {
                     Log.w("getCategories", result.throwable)
-                    // TODO:
+                    _uiState.value = UiState.Error(result.throwable.localizedMessage)
                 }
             }
 
@@ -81,18 +89,19 @@ class CategoryViewModel @Inject constructor(
 
     fun propOptionSelected(property: Property, option: Option) {
         viewModelScope.launch {
-            val currentProps = _uiState.value.props ?: return@launch
+            val currentProps = dataModel.props ?: return@launch
 
             val result = selectPropertyOptionUseCase.invoke(currentProps, property, option)
             when (result) {
                 is UCResult.Success -> {
-                    val newState = _uiState.value.copy(props = result.data)
+                    val newState = dataModel.copy(props = result.data)
+                    dataModel = newState
                     _uiState.value = newState
                 }
 
                 is UCResult.Error -> {
                     Log.w("propOptionSelected", result.throwable)
-                    // TODO
+                    _uiState.value = UiState.Error(result.throwable.localizedMessage)
                 }
             }
 
@@ -103,14 +112,14 @@ class CategoryViewModel @Inject constructor(
         val result = arrayListOf(AppResult("Key", "Value"))
 
         val categoryKey = "Category"
-        val categoryValue = uiState.value.selectedCategory?.name.orEmpty()
+        val categoryValue = dataModel.selectedCategory?.name.orEmpty()
         result += AppResult(categoryKey, categoryValue)
 
         val subCategoryKey = "SubCategory"
-        val subCategoryValue = uiState.value.selectedSubCategory?.name.orEmpty()
+        val subCategoryValue = dataModel.selectedSubCategory?.name.orEmpty()
         result += AppResult(subCategoryKey, subCategoryValue)
 
-        val props = uiState.value.props ?: emptyList()
+        val props = dataModel.props ?: emptyList()
         val options = props.filter { it.selectedOption != null }
             .map { it.name to it.selectedOption!! }
 
@@ -126,10 +135,16 @@ class CategoryViewModel @Inject constructor(
         return result
     }
 
-    data class UiState(
-        val categories: List<Category>,
-        val selectedCategory: Category? = null,
-        val selectedSubCategory: Category? = null,
-        val props: List<Property>? = null
-    )
+    sealed class UiState {
+        data class Data(
+            val categories: List<Category>,
+            val selectedCategory: Category? = null,
+            val selectedSubCategory: Category? = null,
+            val props: List<Property>? = null
+        ) : UiState()
+
+        data object Loading : UiState()
+        data class Error(val message: String) : UiState()
+    }
+
 }
